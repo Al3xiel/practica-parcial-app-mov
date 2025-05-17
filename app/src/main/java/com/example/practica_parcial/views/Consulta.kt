@@ -105,8 +105,8 @@ fun Consulta(nav: NavHostController, viewModel: PostViewModel, context: Context)
                     title,
                     body
                 )
-
-                nav.navigate("P2")
+                viewModel.insertPost(context,post)
+                nav.navigate("S2")
             },
             modifier = Modifier
                 .fillMaxWidth()
