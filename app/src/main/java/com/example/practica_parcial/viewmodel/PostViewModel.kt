@@ -17,7 +17,7 @@ import kotlinx.coroutines.launch
 class PostViewModel: ViewModel(){
 
     //RETROFIT
-    var post: Post = Post(1,1,"","")
+    var post: Post = Post(0,0,"","")
 
     suspend fun getPost(id: Int){
         val response = RetrofitClient.webService.getPostById(id)
