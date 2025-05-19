@@ -110,18 +110,18 @@ fun Consulta(nav: NavHostController, viewModel: PostViewModel, context: Context,
 
         Button (
             onClick = {
-//                if(existsInList(id, viewModel, context) || id == 0)
-//                {
-//                    nav.navigate("S2")
-//                }else{
-//                    val post= Post(
-//                        id,
-//                        userId,
-//                        title,
-//                        body
-//                    )
-//                    viewModel.insertPost(context,post)
-//                }
+                if(existsInList(id, viewModel, context) || id == 0)
+                {
+                    nav.navigate("S2")
+                }else{
+                    val post= Post(
+                        id,
+                        userId,
+                        title,
+                        body
+                    )
+                    viewModel.insertPost(context,post)
+                }
             },
             modifier = Modifier
                 .fillMaxWidth()
