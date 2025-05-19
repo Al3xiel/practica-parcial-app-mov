@@ -1,6 +1,7 @@
 package com.example.practica_parcial.views
 
 import android.content.Context
+import android.content.SharedPreferences
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -25,19 +26,25 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewModelScope
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
+import com.example.practica_parcial.MainActivity
 import com.example.practica_parcial.model.beans.Post
 import com.example.practica_parcial.viewmodel.PostViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
 @Composable
-fun Consulta(nav: NavHostController, viewModel: PostViewModel, context: Context) {
+fun Consulta(nav: NavHostController, viewModel: PostViewModel, context: Context, mainActivity: MainActivity) {
 
     var id by remember { mutableStateOf(viewModel.post.id)}
     var userId by remember { mutableStateOf(viewModel.post.userId)}
     var title by remember { mutableStateOf(viewModel.post.title)}
     var body by remember { mutableStateOf(viewModel.post.body)}
+
+    val pref: SharedPreferences? = mainActivity.getSharedPreferences("preferences", Context.MODE_PRIVATE)
+
+    val lastUserId = pref?.getString("lastUserId", null) ?: "Insert User"
 
     var txtId by remember { mutableStateOf("")}
 
@@ -60,7 +67,7 @@ fun Consulta(nav: NavHostController, viewModel: PostViewModel, context: Context)
                 .padding(vertical = 15.dp)
                 .fillMaxWidth(),
             label = { Text(text = "Insert ID") },
-            placeholder = { Text("Insert User") },
+            placeholder = { Text(lastUserId) },
             leadingIcon = {
                 Icon(
                     imageVector = Icons.Default.AccountCircle,
@@ -86,6 +93,10 @@ fun Consulta(nav: NavHostController, viewModel: PostViewModel, context: Context)
                     userId=viewModel.post.userId
                     title=viewModel.post.title
                     body=viewModel.post.body
+                    val editor: SharedPreferences.Editor = pref!!.edit()
+                    editor.putString("lastUserId", txtId)
+                    editor.apply()
+                    editor.commit()
                 }
             },
         ) {
@@ -99,14 +110,18 @@ fun Consulta(nav: NavHostController, viewModel: PostViewModel, context: Context)
 
         Button (
             onClick = {
-                val post= Post(
-                    id,
-                    userId,
-                    title,
-                    body
-                )
-                viewModel.insertPost(context,post)
-                nav.navigate("S2")
+//                if(existsInList(id, viewModel, context) || id == 0)
+//                {
+//                    nav.navigate("S2")
+//                }else{
+//                    val post= Post(
+//                        id,
+//                        userId,
+//                        title,
+//                        body
+//                    )
+//                    viewModel.insertPost(context,post)
+//                }
             },
             modifier = Modifier
                 .fillMaxWidth()
@@ -115,4 +130,17 @@ fun Consulta(nav: NavHostController, viewModel: PostViewModel, context: Context)
             Text(text = "Registrar Post")
         }
     }
+}
+
+fun existsInList(id: Int, viewModel: PostViewModel, context: Context): Boolean {
+    var listaP: MutableList<Post>
+    listaP = viewModel.postList
+
+    for (i in listaP) {
+        if (i.id == id) {
+            return true
+        }
+    }
+
+    return false
 }

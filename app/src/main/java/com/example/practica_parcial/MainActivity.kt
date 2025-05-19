@@ -25,7 +25,7 @@ class MainActivity : ComponentActivity() {
         enableEdgeToEdge()
         setContent {
             PracticaparcialTheme {
-                Navigation(viewModel,this)
+                Navigation(viewModel,this, this)
             }
         }
     }
